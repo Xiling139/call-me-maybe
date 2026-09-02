@@ -9,7 +9,7 @@ MYPY = $(VENV)/bin/mypy
 .PHONY: install run debug clean lint lint-strict
 
 run:
-	$(UV) run --activate $(PYTHON) -m src
+	$(UV) run $(PYTHON) -m src
 
 install:
 	$(PYTHON) -m venv $(VENV)
