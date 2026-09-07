@@ -53,7 +53,7 @@ class Decoder(BaseModel):
 
         open_braces_token: List[int] = [90, 314, 341, 515, 972]
 
-        banned_tokens: List[int] = [497, 756, 1153]
+        banned_tokens: List[int] = [497, 756, 1153, 2198, 4913, 5212, 95642]
 
         # Ban tokens
         for i in banned_tokens:
@@ -80,6 +80,7 @@ class Decoder(BaseModel):
             logits[token_set_3[i]] = math.inf
 
         if self.decoding_status == "parameter" and self.decoding_order > 3:
+            logits[11693] = -math.inf  # Token Corresponding to \":
             if last_token == 788:
                 self.type_restriction = True
                 self.type_order += 1
@@ -89,7 +90,8 @@ class Decoder(BaseModel):
         number_mode_allowed: List[int] = [i for i in range(15, 25)]
         number_mode_allowed += [11, 92, 220]
 
-        string_mode_prohibited: List[int] = [788]
+        string_mode_prohibited: List[int] = [30, 62, 91, 606, 788, 917, 1355,
+                                             1699, 7646]
         string_mode_prohibited += open_braces_token
 
         if self.type_restriction:
@@ -99,6 +101,8 @@ class Decoder(BaseModel):
                         logits[i] = -math.inf
 
             if parameters[self.type_order] == "string":
+                if last_token == 788:       # Token <": >
+                    logits[330] = math.inf  # Token < ">
                 for i in string_mode_prohibited:
                     logits[i] = -math.inf
 
@@ -147,17 +151,19 @@ class Decoder(BaseModel):
             return prompt
 
         else:
-            prompt_dict: Dict[str, Any] = {}
-            request: str = "Complete parameters.\n"
+            param_dict: Dict[str, Any] = {}
+            request: str = "Generate parameters to solve the prompt.\n"
             for d in functions:
                 if d["name"] == func:
-                    d.pop("name")
+                    # d.pop("name")
                     d.pop("description")
                     d.pop("returns")
-                    prompt_dict = d
+
+                    param_dict = d
 
             prompt += request
-            prompt += json.dumps(prompt_dict)
+            prompt += "Usage of the function:\n"
+            prompt += json.dumps(param_dict)
 
             return prompt
 
@@ -331,6 +337,10 @@ def main_loop(
             braces += 1
         if token in close_braces_token:
             braces -= 1
+
+        if it > 200:
+            print("Error: Timed out.", file=sys.stderr)
+            break
 
         if it > 1 and braces == 0:
             if decoder.get_decoding_status() == "parameter":

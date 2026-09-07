@@ -19,18 +19,30 @@
     "prompt": "Greet shrek",
     "name": "fn_greet",
     "parameters": {
-      "name": "name"
+      "name": "shrek"
     }
   },
   {
     "prompt": "Greet john",
     "name": "fn_greet",
     "parameters": {
-      "name": "name"
+      "name": "john"
     }
   },
-  null,
-  null,
+  {
+    "prompt": "Reverse the string 'hello'",
+    "name": "fn_reverse_string",
+    "parameters": {
+      "s": "hello"
+    }
+  },
+  {
+    "prompt": "Reverse the string 'world'",
+    "name": "fn_reverse_string",
+    "parameters": {
+      "s": "world"
+    }
+  },
   {
     "prompt": "What is the square root of 16?",
     "name": "fn_get_square_root",
@@ -42,30 +54,26 @@
     "prompt": "Calculate the square root of 144",
     "name": "fn_get_square_root",
     "parameters": {
-      "input": 144
+      "a": 144
     }
   },
-  {
-    "prompt": "Replace all numbers in \"Hello 34 I'm 233 years old\" with NUMBERS",
-    "name": "fn_substitute_string_with_regex",
-    "parameters": {
-      "source_string": "Hello 34 I'm 233 years old"
-    }
-  },
+  null,
   {
     "prompt": "Replace all vowels in 'Programming is fun' with asterisks",
     "name": "fn_substitute_string_with_regex",
     "parameters": {
-      "source_string": "Programming is fun"
+      "source_string": "Programming is fun",
+      "regex_pattern": "[aeiouAEIOU]",
+      "replacement": "*"
     }
   },
   {
     "prompt": "Substitute the word 'cat' with 'dog' in 'The cat sat on the mat with another cat'",
     "name": "fn_substitute_string_with_regex",
     "parameters": {
-      "source_string": "string",
-      "regex_pattern": "string",
-      "replacement": "string"
+      "source_string": "The cat sat on the mat with another cat",
+      "regex": "cat.*cat.*",
+      "replacement": "dog"
     }
   }
 ]
