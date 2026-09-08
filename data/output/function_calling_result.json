@@ -57,13 +57,21 @@
       "a": 144
     }
   },
-  null,
+  {
+    "prompt": "Replace all numbers in \"Hello 34 I'm 233 years old\" with NUMBERS",
+    "name": "fn_substitute_string_with_regex",
+    "parameters": {
+      "source_string": "Hello 34 I'm 233 years old",
+      "regex": "/\\d+/g",
+      "replacement": "NUMBERS"
+    }
+  },
   {
     "prompt": "Replace all vowels in 'Programming is fun' with asterisks",
     "name": "fn_substitute_string_with_regex",
     "parameters": {
       "source_string": "Programming is fun",
-      "regex_pattern": "[aeiouAEIOU]",
+      "regex": "[aeiouAEIOU]",
       "replacement": "*"
     }
   },
@@ -72,7 +80,7 @@
     "name": "fn_substitute_string_with_regex",
     "parameters": {
       "source_string": "The cat sat on the mat with another cat",
-      "regex": "cat.*cat.*",
+      "regex": "/cat/gi",
       "replacement": "dog"
     }
   }
