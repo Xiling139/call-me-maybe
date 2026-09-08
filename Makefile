@@ -5,11 +5,13 @@ PIP = $(VENV)/bin/pip
 PYTHON_VENV = $(VENV)/bin/python3
 FLAKE8 = $(VENV)/bin/flake8
 MYPY = $(VENV)/bin/mypy
+SRC = src
+LLM = llm_sdk
 
 .PHONY: install run debug clean lint lint-strict
 
 run:
-	$(UV) run $(PYTHON) -m src
+	$(UV) run $(PYTHON) -m $(SRC)
 
 install:
 	$(PYTHON) -m venv $(VENV)
@@ -20,6 +22,8 @@ debug:
 	$(PYTHON) -m pdb a_maze_ing.py
 
 clean:
+	rm -rf $(SRC)/__pycache__
+	rm -rf $(LLM)/__pycache__
 	rm -rf __pycache__
 	rm -rf .mypy_cache
 	rm -rf dist

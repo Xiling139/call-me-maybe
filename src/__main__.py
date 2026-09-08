@@ -53,7 +53,8 @@ class Decoder(BaseModel):
 
         open_braces_token: List[int] = [90, 314, 341, 515, 972]
 
-        banned_tokens: List[int] = [497, 756, 1153, 2198, 4913, 5212, 95642]
+        banned_tokens: List[int] = [497, 756, 1153, 2198, 4913, 5212, 57955,
+                                    95642]
 
         # Ban tokens
         for i in banned_tokens:
@@ -86,11 +87,14 @@ class Decoder(BaseModel):
                 self.type_order += 1
             if last_token == 11 or last_token == 92:
                 self.type_restriction = False
+            if last_token == 26387:
+                logits[3904] = -math.inf    # No _string after regex.
+                logits[21260] = -math.inf   # No _pattern after regex.
 
         number_mode_allowed: List[int] = [i for i in range(15, 25)]
         number_mode_allowed += [11, 92, 220]
 
-        string_mode_prohibited: List[int] = [30, 62, 91, 606, 788, 917, 1355,
+        string_mode_prohibited: List[int] = [30, 62, 606, 788, 917, 1355,
                                              1699, 7646]
         string_mode_prohibited += open_braces_token
 
@@ -151,6 +155,8 @@ class Decoder(BaseModel):
             return prompt
 
         else:
+            has_regex: bool = False
+
             param_dict: Dict[str, Any] = {}
             request: str = "Generate parameters to solve the prompt.\n"
             for d in functions:
@@ -161,9 +167,15 @@ class Decoder(BaseModel):
 
                     param_dict = d
 
+            for p in param_dict["parameters"].keys():
+                if p == "regex":
+                    has_regex = True
+
             prompt += request
             prompt += "Usage of the function:\n"
             prompt += json.dumps(param_dict)
+            if has_regex:
+                prompt += "\nUse POSIX regular expression for regex.\n"
 
             return prompt
 
@@ -388,14 +400,18 @@ def main() -> None:
     script_dir: Path = Path(__file__).resolve().parent
     def_file_path = script_dir.parent / "data" / "input" / "functions_definition.json"
     test_file_path = script_dir.parent / "data" / "input" / "function_calling_tests.json"
-    output_path = script_dir.parent / "data" / "output" / "function_calls.json"
+    output_path = script_dir.parent / "data" / "output" / "function_calling_result.json"
 
     vocab_path_local = script_dir.parent / "formatted_vocab.json"
 
-    function_list: List[Dict[str, Any]] = read_json_contents(def_file_path)
-    calling_tests: List[Dict[str, str]] = read_json_contents(test_file_path)
+    try:
+        function_list: List[Dict[str, Any]] = read_json_contents(def_file_path)
+        calling_tests: List[Dict[str, str]] = read_json_contents(test_file_path)
 
-    vocab_dict: Dict[str, int] = read_json_contents(vocab_path_local)
+        vocab_dict: Dict[str, int] = read_json_contents(vocab_path_local)
+    except Exception as e:
+        print(f"FILE MISSING: {e}")
+        return
 
     for i, test in enumerate(calling_tests):
         generated_json: List[Dict[str, Any]] = main_loop(
