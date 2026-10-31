@@ -1,3 +1,11 @@
+"""Constrained decoder that masks LLM logits to enforce a JSON schema.
+
+The decoder keeps a small state machine (prompt, function, parameter) and
+modifies the logits returned by the language model before the next token is
+selected. Invalid tokens are assigned ``-inf`` and forced tokens are assigned
+``+inf``.
+"""
+
 from pydantic import BaseModel
 from typing import Any, List, Dict
 import math
@@ -6,6 +14,19 @@ import sys
 
 
 class Decoder(BaseModel):
+    """Stateful controller for token-by-token constrained JSON decoding.
+
+    Attributes:
+        model: LLM wrapper used to obtain next-token logits.
+        vocab_path: Path to the tokenizer vocabulary file.
+        decoding_status: Current stage: ``prompt``, ``function`` or
+            ``parameter``.
+        decoding_order: Number of tokens generated in the current stage.
+        type_restriction: Whether parameter-type masking is active.
+        type_order: Index of the parameter currently being generated.
+        banned_tokens: Token IDs that may never be generated.
+        current_param_name: Name of the parameter currently being generated.
+    """
 
     model: Any
     vocab_path: str
@@ -20,7 +41,16 @@ class Decoder(BaseModel):
             self,
             vocab: Dict[str, int]
                 ) -> None:
+        """Collect token IDs whose text would break the JSON structure.
 
+        Tokens containing a closing brace directly followed by a comma, or
+        tokens containing more than one brace, are added to
+        :attr:`banned_tokens`. The method is intended to be called once after
+        the vocabulary has been loaded.
+
+        Args:
+            vocab: Mapping from token text to token ID.
+        """
         manually_added: List[int] = [1153, 57955]
         self.banned_tokens += manually_added
 
@@ -44,7 +74,16 @@ class Decoder(BaseModel):
             input_ids: List[int],
             parameters: Dict[str, str] = {}
                 ) -> int:
+        """Select the next token after applying the active constraints.
 
+        Args:
+            input_ids: Token IDs that form the current model context.
+            parameters: Parameter names mapped to their declared JSON types.
+
+        Returns:
+            The ID of the highest-scoring token that survives masking, or
+            ``-1`` if no token is left with a finite logit.
+        """
         current_token: int = -1
         max_logit: float = -math.inf
         logits: List[float] = self.model.get_logits_from_input_ids(input_ids)
@@ -65,7 +104,22 @@ class Decoder(BaseModel):
             last_token: int,
             parameters: Dict[str, str] = {}
                 ) -> List[float]:
+        """Apply the structural and type constraints to a logit vector.
 
+        The method bans structurally unsafe tokens, forces the fixed JSON
+        scaffolding for the current stage, and restricts parameter values
+        according to their declared type. It also advances
+        :attr:`decoding_order` and the parameter type state.
+
+        Args:
+            logits: Raw logits for every token in the vocabulary.
+            last_token: Token selected during the previous generation step.
+            parameters: Parameter names mapped to their declared JSON types.
+
+        Returns:
+            The modified logit vector. Banned positions are ``-inf`` and
+            forced positions are ``+inf``.
+        """
         token_set_1: List[int] = [90, 330, 40581, 788, 330]
         token_set_2: List[int] = [330, 606, 788, 330]
         token_set_3: List[int] = [330, 13786, 788, 314]
@@ -155,7 +209,24 @@ class Decoder(BaseModel):
             func: str,
             sequence: int
                 ) -> str:
+        """Build the natural-language prompt for the current decoding stage.
 
+        In the ``prompt`` stage the prompt asks the model to copy the user
+        request. In the ``function`` stage it lists the available function
+        names. In the ``parameter`` stage it shows the usage of the selected
+        function and asks for its arguments.
+
+        Args:
+            functions: Function definitions used to build the prompt. The
+                dictionaries are modified in place, so callers should pass a
+                deep copy when the originals are still needed.
+            tests: Test prompts indexed by ``sequence``.
+            func: Function selected in the function stage.
+            sequence: Zero-based index of the prompt in ``tests``.
+
+        Returns:
+            The prompt text for the current stage.
+        """
         prompt: str = ""
         request: str = ""
 
@@ -209,6 +280,12 @@ class Decoder(BaseModel):
             return prompt
 
     def shift_decoding_status(self) -> None:
+        """Advance the decoder to the next generation stage.
+
+        The transition order is ``prompt`` -> ``function`` -> ``parameter``.
+        Calling the method from the final stage prints a diagnostic message
+        and leaves the state unchanged.
+        """
         if self.decoding_status == "prompt":
             self.decoding_status = "function"
             self.reset_decoding_order()
@@ -226,14 +303,12 @@ class Decoder(BaseModel):
             pass
 
     def reset_decoding_order(self) -> None:
+        """Reset the token counter of the current stage to zero."""
         self.decoding_order = 0
 
     def get_decoding_status(self) -> str:
+        """Return the name of the current decoding stage."""
         return self.decoding_status
 
     def reset_decoding_status(self) -> None:
-        self.reset_decoding_order()
-        self.decoding_status = "prompt"
-        self.type_restriction = False
-        self.type_order = -1
-        self.current_param_name = ""
+        """Reset all decoding state before processing a new prompt."""
