@@ -1,5 +1,6 @@
 PYTHON = python3
-VENV = venv
+VENV = .venv
+SOURCE = source
 UV = uv
 PIP = $(VENV)/bin/pip
 PYTHON_VENV = $(VENV)/bin/python3
@@ -11,12 +12,13 @@ LLM = llm_sdk
 .PHONY: install run debug clean lint lint-strict
 
 run:
-	$(UV) run $(PYTHON) -m $(SRC)
+	$(UV) run --active $(PYTHON) -m $(SRC)
 
 install:
 	$(PYTHON) -m venv $(VENV)
 	$(PIP) install flake8
 	$(PIP) install mypy
+	$(PIP) install uv
 
 debug:
 	$(PYTHON) -m pdb a_maze_ing.py
@@ -30,9 +32,9 @@ clean:
 	rm -rf *.egg-info
 
 lint:
-	$(FLAKE8) . --exclude $(VENV)
+	$(FLAKE8) . --exclude=$(VENV),$(LLM)
 	$(MYPY) --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs .
 
 lint-strict:
-	$(FLAKE8) . --exclude $(VENV)
+	$(FLAKE8) . --exclude=$(VENV),$(LLM)
 	$(MYPY) --strict .
