@@ -1,0 +1,53 @@
+[
+  {
+    "prompt": "What is the difference between 10 and 4?"
+  },
+  {
+    "prompt": "Subtract 987 from 1234"
+  },
+  {
+    "prompt": "Multiply 7 by 8"
+  },
+  {
+    "prompt": "What is the product of 23 and 19?"
+  },
+  {
+    "prompt": "Divide 100 by 4"
+  },
+  {
+    "prompt": "What is 81 divided by 9?"
+  },
+  {
+    "prompt": "Concatenate 'data' and 'science'"
+  },
+  {
+    "prompt": "Join the strings 'hello' and 'world' together"
+  },
+  {
+    "prompt": "Convert 'make this loud' to uppercase"
+  },
+  {
+    "prompt": "Uppercase the string 'hello there'"
+  },
+  {
+    "prompt": "What is 2 to the power of 10?"
+  },
+  {
+    "prompt": "Calculate 5 raised to the power 3"
+  },
+  {
+    "prompt": "How many characters are in 'function calling'?"
+  },
+  {
+    "prompt": "Count the characters in 'abcdefg'"
+  },
+  {
+    "prompt": "Capitalize every word in 'the quick brown fox'"
+  },
+  {
+    "prompt": "Extract the digits from 'Order 42 was placed in 2026'"
+  },
+  {
+    "prompt": "Remove all non-digit characters from 'a1b2c3'"
+  }
+]

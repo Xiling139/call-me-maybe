@@ -62,7 +62,7 @@
     "name": "fn_substitute_string_with_regex",
     "parameters": {
       "source_string": "Hello 34 I'm 233 years old",
-      "regex": "/\\d+/g",
+      "regex": "\\d+",
       "replacement": "NUMBERS"
     }
   },
@@ -80,7 +80,7 @@
     "name": "fn_substitute_string_with_regex",
     "parameters": {
       "source_string": "The cat sat on the mat with another cat",
-      "regex": "/cat/gi",
+      "regex": "/cat/ig",
       "replacement": "dog"
     }
   }

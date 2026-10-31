@@ -1,0 +1,131 @@
+[
+  {
+    "prompt": "What is the difference between 10 and 4?",
+    "name": "fn_subtract_numbers",
+    "parameters": {
+      "a": 10,
+      "b": 4
+    }
+  },
+  {
+    "prompt": "Subtract 987 from 1234",
+    "name": "fn_subtract_numbers",
+    "parameters": {
+      "a": 1234,
+      "b": 987
+    }
+  },
+  {
+    "prompt": "Multiply 7 by 8",
+    "name": "fn_multiply_numbers",
+    "parameters": {
+      "a": 7,
+      "b": 8
+    }
+  },
+  {
+    "prompt": "What is the product of 23 and 19?",
+    "name": "fn_multiply_numbers",
+    "parameters": {
+      "a": 23,
+      "b": 19
+    }
+  },
+  {
+    "prompt": "Divide 100 by 4",
+    "name": "fn_divide_numbers",
+    "parameters": {
+      "a": 100,
+      "b": 4
+    }
+  },
+  {
+    "prompt": "What is 81 divided by 9?",
+    "name": "fn_divide_numbers",
+    "parameters": {
+      "a": 81,
+      "b": 9
+    }
+  },
+  {
+    "prompt": "Concatenate 'data' and 'science'",
+    "name": "fn_concatenate_strings",
+    "parameters": {
+      "first": "data",
+      "second": "science"
+    }
+  },
+  {
+    "prompt": "Join the strings 'hello' and 'world' together",
+    "name": "fn_concatenate_strings",
+    "parameters": {
+      "first": "hello",
+      "second": "world"
+    }
+  },
+  {
+    "prompt": "Convert 'make this loud' to uppercase",
+    "name": "fn_to_uppercase",
+    "parameters": {
+      "text": "make this loud"
+    }
+  },
+  {
+    "prompt": "Uppercase the string 'hello there'",
+    "name": "fn_to_uppercase",
+    "parameters": {
+      "text": "hello there"
+    }
+  },
+  {
+    "prompt": "What is 2 to the power of 10?",
+    "name": "fn_power",
+    "parameters": {
+      "base": 2,
+      "exponent": 10
+    }
+  },
+  {
+    "prompt": "Calculate 5 raised to the power 3",
+    "name": "fn_power",
+    "parameters": {
+      "base": 5,
+      "exponent": 3
+    }
+  },
+  {
+    "prompt": "How many characters are in 'function calling'?",
+    "name": "fn_count_characters",
+    "parameters": {
+      "s": "function calling"
+    }
+  },
+  {
+    "prompt": "Count the characters in 'abcdefg'",
+    "name": "fn_count_characters",
+    "parameters": {
+      "s": "abcdefg"
+    }
+  },
+  {
+    "prompt": "Capitalize every word in 'the quick brown fox'",
+    "name": "fn_capitalize_words",
+    "parameters": {
+      "sentence": "the quick brown fox"
+    }
+  },
+  {
+    "prompt": "Extract the digits from 'Order 42 was placed in 2026'",
+    "name": "fn_extract_digits",
+    "parameters": {
+      "s": "Order 42 was placed in 2026"
+    }
+  },
+  {
+    "prompt": "Remove all non-digit characters from 'a1b2c3'",
+    "name": "fn_extract_digits",
+    "parameters": {
+      "s": "a1b2c3"
+    }
+  }
+]

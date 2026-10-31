@@ -1,0 +1,125 @@
+[
+  {
+    "name": "fn_subtract_numbers",
+    "description": "Subtract the second number from the first and return the difference.",
+    "parameters": {
+      "a": {
+        "type": "number"
+      },
+      "b": {
+        "type": "number"
+      }
+    },
+    "returns": {
+      "type": "number"
+    }
+  },
+  {
+    "name": "fn_multiply_numbers",
+    "description": "Multiply two numbers together and return the product.",
+    "parameters": {
+      "a": {
+        "type": "number"
+      },
+      "b": {
+        "type": "number"
+      }
+    },
+    "returns": {
+      "type": "number"
+    }
+  },
+  {
+    "name": "fn_divide_numbers",
+    "description": "Divide the first number by the second and return the quotient.",
+    "parameters": {
+      "a": {
+        "type": "number"
+      },
+      "b": {
+        "type": "number"
+      }
+    },
+    "returns": {
+      "type": "number"
+    }
+  },
+  {
+    "name": "fn_concatenate_strings",
+    "description": "Concatenate two strings and return the combined result.",
+    "parameters": {
+      "first": {
+        "type": "string"
+      },
+      "second": {
+        "type": "string"
+      }
+    },
+    "returns": {
+      "type": "string"
+    }
+  },
+  {
+    "name": "fn_to_uppercase",
+    "description": "Convert a string to uppercase and return the result.",
+    "parameters": {
+      "text": {
+        "type": "string"
+      }
+    },
+    "returns": {
+      "type": "string"
+    }
+  },
+  {
+    "name": "fn_power",
+    "description": "Raise a number to the given exponent and return the result.",
+    "parameters": {
+      "base": {
+        "type": "number"
+      },
+      "exponent": {
+        "type": "number"
+      }
+    },
+    "returns": {
+      "type": "number"
+    }
+  },
+  {
+    "name": "fn_count_characters",
+    "description": "Count the number of characters in a string and return the count.",
+    "parameters": {
+      "s": {
+        "type": "string"
+      }
+    },
+    "returns": {
+      "type": "integer"
+    }
+  },
+  {
+    "name": "fn_capitalize_words",
+    "description": "Capitalize the first letter of every word in a sentence.",
+    "parameters": {
+      "sentence": {
+        "type": "string"
+      }
+    },
+    "returns": {
+      "type": "string"
+    }
+  },
+  {
+    "name": "fn_extract_digits",
+    "description": "Extract all digits from a string and return them as a string.",
+    "parameters": {
+      "s": {
+        "type": "string"
+      }
+    },
+    "returns": {
+      "type": "string"
+    }
+  }
+]
